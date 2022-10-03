@@ -10,12 +10,13 @@ import json
 import time
 import os
 import pandas as pd
+import time
 search_string = "python разработчик"
 total_page = 100
 all_vac = []
-for i in range(1000):
+for i in range(20):
     url = 'https://api.hh.ru/vacancies'
-    params = {'text': search_string, 'area':'113','per_page':'40', 'page':i}
+    params = {'text': search_string, 'area':'113','per_page':'40', 'page':i,"User-Agent": "MyApp/1.0 (my-app-feedback@example.com)"}
     r = requests.get(url, params=params)
     all_items=r.json()
     for item in all_items["items"]:
@@ -38,5 +39,9 @@ for i in range(1000):
         salary = f"{min_sal} - {max_sal} {currency}"
         one_vac = {"title":item["name"],"work experience":exp,"salary":salary,"region":item["area"]["name"]}
         all_vac.append(one_vac)
+    print(all_vac)
+    time.sleep(3)
 js_string = json.dumps({"data":all_vac})
+with open("parsing.json", "w", encoding="utf-8") as f:
+    json.dump({"data":all_vac},f,ensure_ascii = False)
 print(js_string)
